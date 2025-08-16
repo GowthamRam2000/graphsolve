@@ -52,7 +52,10 @@ export const puzzleAPI = {
   },
 
   generateMaze(size = 10, difficulty = 'medium') {
-    return api.post('/maze/generate', { size, difficulty })
+    return api.post('/maze/generate', {
+      size: parseInt(size),
+      difficulty
+    })
   },
 
   checkHealth() {

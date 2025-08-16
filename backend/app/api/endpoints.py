@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from typing import Dict, Any
 from app.models.schemas import (
     PuzzleRequest, PuzzleResponse, PresetPuzzle,
@@ -10,6 +11,12 @@ from app.solvers.maze import MazeSolver
 from app.solvers.knight import KnightSolver
 
 router = APIRouter()
+
+
+class MazeGenerateRequest(BaseModel):
+    size: int = 10
+    difficulty: str = "medium"
+
 
 PUZZLE_PRESETS = {
     "sudoku": [
@@ -250,16 +257,41 @@ async def get_presets(puzzle_type: str):
     return PUZZLE_PRESETS[puzzle_type]
 
 
+@router.get("/puzzles/algorithms/{puzzle_type}")
+async def get_algorithms(puzzle_type: str):
+    algorithms = {
+        "sudoku": ["backtracking", "constraint_propagation"],
+        "nqueens": ["backtracking"],
+        "maze": ["bfs", "dfs", "astar"],
+        "knight": ["warnsdorff", "backtracking"]
+    }
+
+    if puzzle_type not in algorithms:
+        raise HTTPException(status_code=404, detail="Puzzle type not found")
+
+    return {"algorithms": algorithms[puzzle_type]}
+
+
 @router.post("/maze/generate")
-async def generate_maze(size: int = 10, difficulty: str = "medium"):
+async def generate_maze(request: MazeGenerateRequest):
+    # Ensure size is an integer and within valid range
+    size = int(request.size)
     if size < 5 or size > 50:
         raise HTTPException(status_code=400, detail="Size must be between 5 and 50")
 
     from app.solvers.maze import MazeSolver
-    maze = MazeSolver.generate_maze(size, size, difficulty)
+
+    # Generate maze (the function will handle odd/even conversion internally)
+    maze = MazeSolver.generate_maze(size, size, request.difficulty)
+
+    # Ensure we return the correct size grid (trim if necessary)
+    if len(maze) > size:
+        maze = maze[:size]
+    if len(maze[0]) > size:
+        maze = [row[:size] for row in maze]
 
     return {
         "grid": maze,
-        "start": [0, 1],
-        "end": [size - 1, size - 2]
+        "start": [0, 0],
+        "end": [size - 1, size - 1]
     }

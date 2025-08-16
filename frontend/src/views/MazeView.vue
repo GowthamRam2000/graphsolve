@@ -223,16 +223,28 @@ const animatePath = async (solution) => {
 
 const generateMaze = async () => {
   try {
-    // Ensure mazeSize is an integer
+    // Ensure mazeSize is an integer and store it
     const size = parseInt(mazeSize.value)
     const response = await puzzleAPI.generateMaze(size)
-    grid.value = response.data.grid
-    start.value = response.data.start
-    end.value = response.data.end
+
+    // Ensure the grid matches the requested size
+    if (response.data.grid && response.data.grid.length === size) {
+      grid.value = response.data.grid
+      // Ensure start and end positions are valid integers
+      start.value = [0, 0]
+      end.value = [size - 1, size - 1]
+    } else {
+      // If backend returns wrong size, create empty grid with correct size
+      grid.value = createEmptyGrid(size, size)
+      start.value = [0, 0]
+      end.value = [size - 1, size - 1]
+    }
+
     path.value = []
     visited.value = []
     steps.value = []
     statistics.value = null
+    currentStep.value = 0
   } catch (error) {
     console.error('Error generating maze:', error)
     alert('Error generating maze: ' + (error.response?.data?.detail || error.message))

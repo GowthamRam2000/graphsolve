@@ -181,23 +181,114 @@ class MazeSolver(BaseSolver):
     @staticmethod
     def generate_maze(rows: int, cols: int, difficulty: str = "medium") -> List[List[int]]:
         import random
+        from collections import deque
 
+        # Create a maze with all walls
         maze = [[1] * cols for _ in range(rows)]
 
-        def carve(x, y):
-            maze[y][x] = 0
-            directions = [(0, 2), (2, 0), (0, -2), (-2, 0)]
-            random.shuffle(directions)
+        # Simple maze generation using Prim's algorithm (guaranteed connected)
+        def generate_connected_maze():
+            # Start with all walls
+            for i in range(rows):
+                for j in range(cols):
+                    maze[i][j] = 1
 
-            for dx, dy in directions:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < cols and 0 <= ny < rows and maze[ny][nx] == 1:
-                    maze[y + dy // 2][x + dx // 2] = 0
-                    carve(nx, ny)
+            # Mark starting cell as path
+            maze[0][0] = 0
 
-        carve(1, 1)
+            # Walls list (cells that could become paths)
+            walls = []
 
-        maze[0][1] = 0
-        maze[rows - 1][cols - 2] = 0
+            # Add walls around starting position
+            if cols > 1:
+                walls.append((0, 1))
+            if rows > 1:
+                walls.append((1, 0))
+
+            while walls:
+                # Pick a random wall
+                wall = random.choice(walls)
+                y, x = wall
+                walls.remove(wall)
+
+                # Count adjacent paths
+                adjacent_paths = 0
+                for dy, dx in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < rows and 0 <= nx < cols and maze[ny][nx] == 0:
+                        adjacent_paths += 1
+
+                # If only one adjacent path, make this a path and add new walls
+                if adjacent_paths <= 1:
+                    maze[y][x] = 0
+
+                    # Add neighboring walls
+                    for dy, dx in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                        ny, nx = y + dy, x + dx
+                        if (0 <= ny < rows and 0 <= nx < cols and
+                                maze[ny][nx] == 1 and (ny, nx) not in walls):
+                            walls.append((ny, nx))
+
+        # Generate base maze
+        generate_connected_maze()
+
+        # Ensure start and end are paths
+        maze[0][0] = 0
+        maze[rows - 1][cols - 1] = 0
+
+        # Add additional paths based on difficulty
+        if difficulty == "easy":
+            # Open up 30% more cells for easy mode
+            cells_to_open = (rows * cols) // 3
+            for _ in range(cells_to_open):
+                y = random.randint(0, rows - 1)
+                x = random.randint(0, cols - 1)
+                maze[y][x] = 0
+        elif difficulty == "medium":
+            # Open up 15% more cells for medium mode
+            cells_to_open = (rows * cols) // 6
+            for _ in range(cells_to_open):
+                y = random.randint(0, rows - 1)
+                x = random.randint(0, cols - 1)
+                maze[y][x] = 0
+
+        # Hard mode keeps the maze as generated (sparse)
+
+        # Ensure path from start to end exists
+        def ensure_path_exists():
+            # Use BFS to check if path exists
+            visited = set()
+            queue = deque([(0, 0)])
+            visited.add((0, 0))
+
+            while queue:
+                y, x = queue.popleft()
+
+                if y == rows - 1 and x == cols - 1:
+                    return True  # Path exists
+
+                for dy, dx in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                    ny, nx = y + dy, x + dx
+                    if (0 <= ny < rows and 0 <= nx < cols and
+                            maze[ny][nx] == 0 and (ny, nx) not in visited):
+                        visited.add((ny, nx))
+                        queue.append((ny, nx))
+
+            return False
+
+        # If no path exists, create one
+        if not ensure_path_exists():
+            # Create a simple path: go right then down
+            # Clear top row
+            for x in range(cols):
+                maze[0][x] = 0
+            # Clear right column
+            for y in range(rows):
+                maze[y][cols - 1] = 0
+            # Add some random paths in between
+            for _ in range(rows + cols):
+                y = random.randint(0, rows - 1)
+                x = random.randint(0, cols - 1)
+                maze[y][x] = 0
 
         return maze
