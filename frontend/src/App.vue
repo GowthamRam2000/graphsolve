@@ -51,9 +51,13 @@ const goTo = (path) => router.push(path)
 
 body {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--background-alt);
   min-height: 100vh;
-  color: #333;
+  color: var(--on-background);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #app {
@@ -63,11 +67,13 @@ body {
 }
 
 .app-header {
-  background: white;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-sticky);
 }
 
 .header-content {
@@ -89,6 +95,7 @@ body {
 
 .logo:hover {
   transform: scale(1.05);
+  filter: drop-shadow(var(--shadow-primary));
 }
 
 .logo-icon {
@@ -96,12 +103,13 @@ body {
 }
 
 .logo h1 {
-  background: linear-gradient(135deg, #4CAF50 0%, #2196F3 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary-light) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 28px;
-  font-weight: 700;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.5px;
 }
 
 .nav-menu {
@@ -110,26 +118,32 @@ body {
 }
 
 .nav-btn {
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
   background: transparent;
-  color: #666;
-  font-size: 16px;
-  font-weight: 500;
+  color: var(--on-surface-variant);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  border-radius: 24px;
-  transition: all 0.3s;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-normal);
   position: relative;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .nav-btn:hover {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4CAF50;
+  background: var(--primary-surface);
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-btn.active {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: var(--on-primary);
+  box-shadow: var(--shadow-primary);
+  transform: translateY(-1px);
 }
 
 .app-main {

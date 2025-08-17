@@ -156,9 +156,33 @@ const onCellClick = (row, col) => {
 
 .maze-grid {
   display: inline-block;
-  border: 3px solid #333;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 3px solid var(--on-surface);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.maze-grid::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+  background-size: 400% 400%;
+  border-radius: var(--radius-md);
+  z-index: -1;
+  animation: gradientShift 8s ease infinite;
+  opacity: 0.1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .maze-row {
@@ -197,18 +221,21 @@ const onCellClick = (row, col) => {
 }
 
 .maze-cell.solution-path {
-  background: #4CAF50;
-  animation: pathPulse 0.3s ease-out;
+  background: var(--success);
+  animation: pathPulse 0.4s ease-out;
+  box-shadow: 0 0 8px rgba(46, 125, 50, 0.4);
 }
 
 .maze-cell.start {
-  background: #2196F3 !important;
-  color: white;
+  background: var(--secondary) !important;
+  color: var(--on-secondary);
+  box-shadow: 0 0 12px rgba(13, 71, 161, 0.5);
 }
 
 .maze-cell.end {
-  background: #FF5722 !important;
-  color: white;
+  background: var(--accent) !important;
+  color: var(--on-accent);
+  box-shadow: 0 0 12px rgba(255, 111, 0, 0.5);
 }
 
 .maze-cell.interactive {

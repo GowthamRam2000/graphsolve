@@ -126,9 +126,23 @@ const onCellClick = (row, col) => {
 
 .chessboard {
   display: inline-block;
-  border: 3px solid #333;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 3px solid var(--on-surface);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.chessboard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  pointer-events: none;
 }
 
 .board-row {
@@ -164,7 +178,14 @@ const onCellClick = (row, col) => {
 }
 
 .board-cell.highlighted {
-  background: #FFE082 !important;
+  background: var(--warning-light) !important;
+  box-shadow: inset 0 0 0 2px var(--warning);
+  animation: highlightPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes highlightPulse {
+  0% { box-shadow: inset 0 0 0 2px var(--warning); }
+  100% { box-shadow: inset 0 0 0 4px var(--warning); }
 }
 
 .piece {

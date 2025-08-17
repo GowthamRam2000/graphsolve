@@ -67,4 +67,5 @@ export const puzzleAPI = {
   }
 }
 
-export default api
+export
+default api

@@ -1,46 +1,113 @@
-/* Custom Material Design 3 inspired theme */
+/* Custom Material Design 3 inspired theme with enhanced color palette */
 :root {
-  /* Primary Colors */
-  --primary: #4CAF50;
-  --primary-light: #8BC34A;
-  --primary-dark: #388E3C;
+  /* Primary Colors - Enhanced Green Spectrum */
+  --primary: #1B5E20;
+  --primary-light: #4CAF50;
+  --primary-lighter: #81C784;
+  --primary-dark: #0A3D0C;
   --on-primary: #FFFFFF;
+  --primary-surface: #E8F5E9;
 
-  /* Secondary Colors */
-  --secondary: #2196F3;
-  --secondary-light: #64B5F6;
-  --secondary-dark: #1976D2;
+  /* Secondary Colors - Enhanced Blue Spectrum */
+  --secondary: #0D47A1;
+  --secondary-light: #2196F3;
+  --secondary-lighter: #64B5F6;
+  --secondary-dark: #072D5C;
   --on-secondary: #FFFFFF;
+  --secondary-surface: #E3F2FD;
+
+  /* Accent Colors */
+  --accent: #FF6F00;
+  --accent-light: #FF9800;
+  --accent-dark: #E65100;
+  --on-accent: #FFFFFF;
 
   /* Surface Colors */
   --surface: #FFFFFF;
-  --surface-variant: #F5F5F5;
-  --on-surface: #212121;
-  --on-surface-variant: #666666;
+  --surface-variant: #F8F9FA;
+  --surface-dim: #F5F5F5;
+  --surface-bright: #FCFCFC;
+  --on-surface: #1A1A1A;
+  --on-surface-variant: #4A4A4A;
 
   /* Background */
-  --background: #FAFAFA;
-  --on-background: #212121;
+  --background: #FAFBFC;
+  --background-alt: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+  --on-background: #1A1A1A;
 
-  /* Error */
-  --error: #F44336;
+  /* Error & Success Colors */
+  --error: #D32F2F;
+  --error-light: #F44336;
   --on-error: #FFFFFF;
+  --success: #2E7D32;
+  --success-light: #4CAF50;
+  --on-success: #FFFFFF;
+  --warning: #F57C00;
+  --warning-light: #FF9800;
+  --on-warning: #FFFFFF;
 
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+  /* Enhanced Shadows with depth */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15), 0 4px 6px rgba(0,0,0,0.08);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.18), 0 10px 10px rgba(0,0,0,0.08);
+  --shadow-2xl: 0 25px 50px rgba(0,0,0,0.25), 0 12px 24px rgba(0,0,0,0.12);
+  
+  /* Colored Shadows */
+  --shadow-primary: 0 4px 14px rgba(27, 94, 32, 0.25);
+  --shadow-secondary: 0 4px 14px rgba(13, 71, 161, 0.25);
+  --shadow-accent: 0 4px 14px rgba(255, 111, 0, 0.25);
 
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* Border Radius with more variety */
+  --radius-xs: 2px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
 
-  /* Transitions */
+  /* Enhanced Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
 }
 
 /* Global Material Icons Styling */

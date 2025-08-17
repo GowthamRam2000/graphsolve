@@ -179,12 +179,31 @@ const isSolutionCell = (row, col) => {
 
 .sudoku-grid {
   display: inline-block;
-  border: 3px solid #1976d2;
-  background: white;
-  padding: 4px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: transform 0.3s;
+  border: 3px solid var(--secondary);
+  background: var(--surface);
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.sudoku-grid::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+  border-radius: var(--radius-lg);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.sudoku-grid:hover::before {
+  opacity: 0.1;
 }
 
 .sudoku-grid.solving {
@@ -215,10 +234,10 @@ const isSolutionCell = (row, col) => {
 }
 
 .sudoku-cell input:focus {
-  background: #E3F2FD;
-  border-color: #2196F3;
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
-  transform: scale(1.05);
+  background: var(--secondary-surface);
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2);
+  transform: scale(1.08);
   z-index: 10;
   position: relative;
 }
@@ -230,18 +249,18 @@ const isSolutionCell = (row, col) => {
 }
 
 .sudoku-cell input.solution {
-  color: #4CAF50;
-  font-weight: 600;
+  color: var(--success);
+  font-weight: var(--font-weight-semibold);
   animation: solutionPulse 0.6s ease-out;
 }
 
 .sudoku-cell input.animating {
-  background: linear-gradient(45deg, #4CAF50, #8BC34A);
-  color: white;
-  transform: scale(1.1);
-  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(45deg, var(--success), var(--success-light));
+  color: var(--on-success);
+  transform: scale(1.12);
+  box-shadow: var(--shadow-primary);
   z-index: 20;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 
 .sudoku-cell input.highlighted {
