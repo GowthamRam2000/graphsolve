@@ -4,23 +4,20 @@ from app.api.endpoints import router
 
 app = FastAPI(
     title="GraphPuzzle API",
-    description="Graph-Based Puzzle-Solving Platform",
-    version="1.0.0",
+    description="Graph-Based Puzzle Solving Platform",
+    version="1.0.0"
 )
 
-# register all API routes first
-app.include_router(router, prefix="/api")
-
-# add CORS middleware so it wraps every route, including OPTIONS pre-flights
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://graphsolvefrontend.onrender.com"],  # restrict to your frontend URL for production security
+    allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    allow_credentials=True,
 )
 
-# basic health checks
+app.include_router(router, prefix="/api")
+
 @app.get("/")
 async def root():
     return {"message": "GraphPuzzle API is running"}

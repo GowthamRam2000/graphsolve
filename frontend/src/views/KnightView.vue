@@ -45,6 +45,7 @@
               :disabled="isLoading"
             />
             <div class="slider-label">{{ boardSize }}×{{ boardSize }} board</div>
+            <p class="hint" v-if="boardSize < 5">Knight's tours are not possible on boards smaller than 5×5</p>
           </div>
         </div>
 
@@ -173,8 +174,8 @@ watch(boardSize, (newSize) => {
 })
 
 const algorithms = [
-  { value: 'warnsdorff', label: "Warnsdorff's Heuristic" },
-  { value: 'backtracking', label: 'Backtracking' }
+  { value: 'warnsdorff', label: "Warnsdorff's Heuristic (Fast)" },
+  { value: 'backtracking', label: 'Backtracking (Slower, More Complete)' }
 ]
 
 const setStartPosition = (position) => {
@@ -195,6 +196,14 @@ const solveTour = async () => {
     const size = parseInt(boardSize.value)
     const start = [parseInt(startPosition.value[0]), parseInt(startPosition.value[1])]
 
+    // Warn user if using backtracking on larger boards
+    if (algorithm.value === 'backtracking' && size > 6) {
+      if (!confirm('Backtracking on larger boards may take longer. Continue?')) {
+        isLoading.value = false
+        return
+      }
+    }
+
     const result = await store.solveKnight(
       size,
       start,
@@ -207,19 +216,49 @@ const solveTour = async () => {
       steps.value = result.steps || []
       statistics.value = result.statistics
 
-      if (tourPath.value.length === size * size) {
+      const totalSquares = size * size
+      const pathLength = tourPath.value.length
+
+      if (pathLength === totalSquares) {
         if (tourType.value === 'closed') {
-          alert('Found a closed tour!')
+          // Check if it's actually a closed tour
+          const lastPos = tourPath.value[tourPath.value.length - 1]
+          const firstPos = tourPath.value[0]
+          const dx = Math.abs(lastPos[0] - firstPos[0])
+          const dy = Math.abs(lastPos[1] - firstPos[1])
+          const isKnightMove = (dx === 2 && dy === 1) || (dx === 1 && dy === 2)
+
+          if (isKnightMove) {
+            alert('Found a closed tour! The knight can return to its starting position.')
+          } else {
+            alert('Found a complete tour (but not closed - cannot return to start).')
+          }
         } else {
           alert('Found a complete tour!')
         }
+      } else if (pathLength > totalSquares * 0.8) {
+        alert(`Found a partial tour covering ${pathLength} out of ${totalSquares} squares (${Math.round(pathLength * 100 / totalSquares)}%)`)
+      } else {
+        alert(`Tour found with ${pathLength} moves.`)
       }
     } else {
-      alert('No tour found from this position!')
+      // Provide specific feedback based on board size
+      if (size === 3 || size === 4) {
+        alert('No knight\'s tour exists for this board size. Try a 5x5 or larger board.')
+      } else if (algorithm.value === 'backtracking') {
+        alert('No tour found within time limit. Try Warnsdorff\'s Heuristic or a different starting position.')
+      } else {
+        alert('No tour found from this position. Try a different starting position or algorithm.')
+      }
     }
   } catch (error) {
     console.error('Error solving tour:', error)
-    alert('Error solving tour: ' + (error.response?.data?.detail || error.message))
+    const errorMsg = error.response?.data?.detail || error.message
+    if (errorMsg.includes('timeout')) {
+      alert('Solution search timed out. Try Warnsdorff\'s Heuristic for faster results.')
+    } else {
+      alert('Error solving tour: ' + errorMsg)
+    }
   } finally {
     isLoading.value = false
   }
@@ -688,5 +727,15 @@ onUnmounted(() => {
 
 .material-icons {
   font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .puzzle-container {
+    flex-direction: column;
+  }
+
+  .puzzle-controls {
+    width: 100%;
+  }
 }
 </style>

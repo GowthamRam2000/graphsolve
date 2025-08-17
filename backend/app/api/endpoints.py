@@ -233,18 +233,43 @@ async def solve_knight(request: PuzzleRequest):
         solution = solver.solve(request.input, request.options.model_dump())
 
         if solution:
+            # Check if it's a complete or partial solution
+            n = request.input['n']
+            total_squares = n * n
+            path_length = len(solution)
+
+            message = None
+            if path_length == total_squares:
+                message = "Complete tour found"
+            elif path_length > total_squares * 0.8:
+                message = f"Partial tour found: {path_length}/{total_squares} squares"
+
             return PuzzleResponse(
                 success=True,
                 solution=solution,
                 steps=solver.steps if request.options.return_steps else [],
-                statistics=solver.get_statistics()
+                statistics=solver.get_statistics(),
+                message=message
             )
         else:
+            # Provide specific error message based on board size
+            n = request.input['n']
+            if n < 5:
+                error_msg = f"No knight's tour exists for {n}×{n} board"
+            else:
+                error_msg = "No tour found from this position"
+
             return PuzzleResponse(
                 success=False,
-                error="No tour found",
+                error=error_msg,
                 statistics=solver.get_statistics()
             )
+    except TimeoutError:
+        return PuzzleResponse(
+            success=False,
+            error="Solution search timed out. Try Warnsdorff's Heuristic for faster results.",
+            statistics=solver.get_statistics() if 'solver' in locals() else None
+        )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

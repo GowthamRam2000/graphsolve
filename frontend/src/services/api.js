@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+const API_BASE_URL = '/api'
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -37,7 +38,11 @@ export const puzzleAPI = {
   solveKnight(n, start, closedTour = false, options = {}) {
     return api.post('/knight/solve', {
       puzzle_type: 'knight',
-      input: { n, start, closed_tour: closedTour },
+      input: {
+        n: parseInt(n),
+        start: [parseInt(start[0]), parseInt(start[1])],
+        closed_tour: closedTour
+      },
       options
     })
   },
