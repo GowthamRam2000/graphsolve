@@ -252,7 +252,6 @@ async def solve_knight(request: PuzzleRequest):
                 message=message
             )
         else:
-            # Provide specific error message based on board size
             n = request.input['n']
             if n < 5:
                 error_msg = f"No knight's tour exists for {n}×{n} board"
@@ -299,17 +298,14 @@ async def get_algorithms(puzzle_type: str):
 
 @router.post("/maze/generate")
 async def generate_maze(request: MazeGenerateRequest):
-    # Ensure size is an integer and within valid range
     size = int(request.size)
     if size < 5 or size > 50:
         raise HTTPException(status_code=400, detail="Size must be between 5 and 50")
 
     from app.solvers.maze import MazeSolver
 
-    # Generate maze (the function will handle odd/even conversion internally)
     maze = MazeSolver.generate_maze(size, size, request.difficulty)
 
-    # Ensure we return the correct size grid (trim if necessary)
     if len(maze) > size:
         maze = maze[:size]
     if len(maze[0]) > size:
