@@ -3,6 +3,8 @@
     <div class="hero">
       <h1>GraphPuzzle</h1>
       <p>Explore classic puzzles through the lens of graph theory</p>
+      <p>Created as part of Master's Coursework on graph theory in winter term by Gowtham Ram M24DE3036</p>
+
     </div>
 
     <div class="puzzles-grid">
